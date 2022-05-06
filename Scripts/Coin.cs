@@ -3,37 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Coin : MonoBehaviour
-{   
+{
+    private Vector3 initialPosition;
     void Start()
     {
+        //Adding Collider and rigidbody to coins.
+        //Added Rigidbody to allow player to clip through.
+        //Disabled Gravity to allow coin to float.
+        initialPosition = transform.position;
         gameObject.AddComponent<BoxCollider>();
         gameObject.AddComponent<Rigidbody>();
         GetComponent<Rigidbody>().useGravity = false;
-        
-        
     }
-    void Update()
-    {
+    void Update(){
+        
+        //Constant Rotation animation.
         transform.Rotate(0, 0, 50f * Time.deltaTime);
-        // Vector3 currentPosition = transform.position;
-        // while (currentPosition.y != 1.5f){
-        //     currentPosition.y -= 0.01f;
-        //     transform.position = currentPosition;
-        // }if(transform.position.y == 1.5f){
-        //     while(transform.position.y!=2.5f){
-        //         currentPosition.y += 0.01f;
-        //         transform.position = currentPosition;
-        //     }
-        // }
-        
-            
-            
+
+        //Constant Floating animation (up and down).
+        GetComponent<Rigidbody>().velocity = new Vector3(0, Mathf.Sin(Time.time * 2) * 0.5f, 0);
     }
-    void OnCollisionEnter(Collision collisionInfo)
-    {
+    void OnCollisionEnter(Collision collisionInfo){
+
+        //Checking for collision with player and Moving Coin out of camera.
         if(collisionInfo.gameObject.name == "Sphere"){
-            Destroy(gameObject);
-        }
-        
+            transform.position = new Vector3(transform.position.x, transform.position.y+10, transform.position.z);
+        } 
     }
 }
